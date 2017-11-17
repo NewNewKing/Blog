@@ -39,7 +39,10 @@ function defineReactive(obj,key,val) {
 		enumerable: true,
     	configurable: true,
     	get: function () {
-
+    		if(Dep.target){
+    	        //添加订阅
+    	        dep.depend()
+    	    }
     		return val;
     	},
     	set: function (newVal) {
@@ -50,6 +53,37 @@ function defineReactive(obj,key,val) {
     		}
     		// observe(newVal);
     		val = newVal;
+
+    		//发布改变
+    		dep.notify();
     	}
 	});
 }
+
+//这一句是不是感觉很熟悉  就相当于初始化vue的data ---- data:{obj:{}};
+const obj = {};
+
+//低配的不能再低配的watcher对象（源码中是一个类，我这用一个对象代替了）
+const watcher = {
+	addDep:function (dep) {
+		dep.addSub(this);
+	},
+	update:function(){
+		html();
+	}
+}
+
+//假装这个是渲染页面的
+function html () {
+	document.querySelector('body').innerHTML = obj.html;
+}
+
+
+defineReactive(obj,'html','how are you');//定义响应式的数据
+
+Dep.target = watcher;
+html();//第一次渲染界面
+Dep.target = null;
+
+// 然后在下打开了控制台开始调试，输入：
+// obj.html = 'I am fine thank you'
