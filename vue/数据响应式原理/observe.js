@@ -35,7 +35,6 @@
 function defineReactive(obj,key,val) {
 	const dep = new Dep();
 	const property = Object.getOwnPropertyDescriptor(obj, key);
-
 	const getter = property && property.get
   	const setter = property && property.set
 
@@ -49,6 +48,7 @@ function defineReactive(obj,key,val) {
     	        //添加订阅
     	        dep.depend()
     	    }
+    	    console.log(dep);
     		return value;
     	},
     	set: function (newVal) {
@@ -60,15 +60,17 @@ function defineReactive(obj,key,val) {
     		}
     		// observe(newVal);
     		val = newVal;
-
-    		//发布改变
+    		console.log(dep);
+    		//发布改变	
     		dep.notify();
     	}
 	});
 }
 
 //这一句是不是感觉很熟悉  就相当于初始化vue的data ---- data:{obj:{}};
-const obj = {};
+const obj = {
+	html:'how are you'
+};
 
 //低配的不能再低配的watcher对象（源码中是一个类，我这用一个对象代替了）
 const watcher = {
@@ -76,21 +78,35 @@ const watcher = {
 		dep.addSub(this);
 	},
 	update:function(){
-		html();
+		box1Html();
+	}
+}
+const watcher2 = {
+	addDep:function (dep) {
+		dep.addSub(this);
+	},
+	update:function(){
+		box2Html();
 	}
 }
 
 //假装这个是渲染页面的
-function html () {
-	document.querySelector('body').innerHTML = obj.html;
+function box1Html () {
+	document.querySelector('#box1').innerHTML = obj.html;
+}
+function box2Html () {
+	document.querySelector('#box2').innerHTML = obj.html;
 }
 
-
-defineReactive(obj,'html','how are you');//定义响应式的数据
-
+defineReactive(obj,'html',obj.html);//定义响应式的数据
 Dep.target = watcher;
-html();//第一次渲染界面
+box1Html();
+Dep.target = null;
+
+Dep.target = watcher2;
+box2Html();
 Dep.target = null;
 
 // 然后在下打开了控制台开始调试，输入：
 // obj.html = 'I am fine thank you'
+
