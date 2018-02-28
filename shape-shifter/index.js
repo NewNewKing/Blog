@@ -141,8 +141,8 @@ class Particle {
 const canvas = {
 	init(){
 		this.setProperty();
-		// this.createParticles();
-		this.createHeart();
+		this.createParticles();
+		// this.createHeart();
 		this.loop();
 	},
 	setProperty(){
@@ -153,18 +153,20 @@ const canvas = {
 	},
 	createParticles(){
 		let dots;
-		ShapeBuilder.write('每个字都是',this.width / 2, this.height / 3, 120);
-		dots = ShapeBuilder.getPositions(6);
-		ShapeBuilder.write('爱你的模样', this.width / 2, this.height * 2 / 3, 120);
-		dots = dots.concat(ShapeBuilder.getPositions(6));
+		// ShapeBuilder.write('每个字都是',this.width / 2, this.height / 3, 120);
+		// dots = ShapeBuilder.getPositions(6);
+		// ShapeBuilder.write('爱你的模样', this.width / 2, this.height * 2 / 3, 120);
+		// dots = dots.concat(ShapeBuilder.getPositions(6));
+		ShapeBuilder.write('Hello',this.width / 2, this.height / 3, 120);
+		dots = ShapeBuilder.getPositions(8);
 		for(let i = 0; i < dots.length; i++){
 			this.particles.push(new Particle({
 				xEnd:dots[i].x, 
 				yEnd:dots[i].y , 
 				x: Math.random() * this.width, 
 				y: Math.random() * this.height, 
-				size:6, 
-				color:'hsla(360, 90%, 65%, 1)',
+				size:8, 
+				// color:'hsla(360, 90%, 65%, 1)',
 			}));
 		}
 		
